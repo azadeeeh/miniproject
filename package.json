@@ -11,6 +11,20 @@
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.18.2"
-  }
+    "express": "^4.18.2",
+    "morgan": "^1.10.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/azadeeeh/miniproject.git"
+  },
+  "keywords": [
+    "web",
+    "express",
+    "node"
+  ],
+  "bugs": {
+    "url": "https://github.com/azadeeeh/miniproject/issues"
+  },
+  "homepage": "https://github.com/azadeeeh/miniproject#readme"
 }
