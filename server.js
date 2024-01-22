@@ -2,8 +2,10 @@ const express = require('express')  // We import the express application
 //const cors = require('cors') // Necessary for localhost
 const currencyRouter = require('./routes/routes')
 //const morgan = require('morgan');
-const setupMiddlewares = require('./utils/middleWare');
+const middlewares = require('./utils/middleWare');
+const cors = require('cors');
 const app = express() // Creates an express application in app
+
 
 
 /**
@@ -21,9 +23,17 @@ const app = express() // Creates an express application in app
 //DELETE /api/currency/3 200 43 - 0.531 ms
 //app.use(morgan('tiny'));
 //setup middleware
-setupMiddlewares(app);
+app.use(cors());
+app.use(express.json()); //parse requests 
+middlewares.setupMorgan(app);
+
+
+
 //setup routes
 app.use('/api/currency', currencyRouter);  // Add currency routes
+
+app.use(middlewares.unknownEndpoint);
+
 
 
 
@@ -37,15 +47,14 @@ app.use('/api/currency', currencyRouter);  // Add currency routes
  * conversionRate: the amount, in that currency, required to equal 1 Canadian dollar
  */
 
+
+
+
 const PORT = 3001
 app.listen(PORT, () => {
   console.log(`Server running on port: ${PORT}`)
 })
 
 
-//handling unknown endpoints
-//anywhete that path does not exist this code will be executed
-app.use((request, response) => {
-  response.status(404).json({ error: 'unknown endpoint' });
-});
+
 

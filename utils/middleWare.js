@@ -1,11 +1,17 @@
-const express = require('express');
-const cors = require('cors');
+
 const morgan = require('morgan');
 
-const setupMiddlewares = (app) => {
-    app.use(cors());
-    app.use(express.json());
+
+
+// Middleware for logging with Morgan
+const setupMorgan = (app) => {
     app.use(morgan('tiny'));
 };
 
-module.exports = setupMiddlewares;
+// Middleware for handling unknown endpoints
+const unknownEndpoint = (request, response) => {
+    response.status(404).json({ error: 'unknown endpoint' });
+};
+
+module.exports = { setupMorgan, unknownEndpoint };
+

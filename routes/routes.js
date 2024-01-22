@@ -45,7 +45,7 @@ currencyRouter.get('/:id', (request, response) => {
     if (requestedCurrency) {
         response.json(requestedCurrency);
     } else {
-        response.status(404).json({ error: 'currency not found' });
+        response.status(404).json({ error: 'resource not found' });
     }
 });
 
@@ -59,7 +59,7 @@ currencyRouter.post('/', (request, response) => {
     const { currencyCode, country, conversionRate } = request.body; //  get info from user
 
     //error handling for empty input
-    if (!currencyCode || !country || !conversionRate) {
+    if (!currencyCode || !country || !conversionRate || currencyCode === "" || country === "" || conversionRate === "") {
         response.status(400).json({ error: 'content missing' });
         return;
     }
@@ -106,7 +106,16 @@ currencyRouter.put('/:id/:newRate', (request, response) => {
  */
 currencyRouter.delete('/:id', (request, response) => {
     const requestedId = Number(request.params.id); //get the id from the input
+    //check if the requested id exists
+    const currencyExists = currencies.find(currency => currency.id === requestedId);
+    if (!currencyExists) {
+        //if id does not exists, give error msg
+        response.status(404).json({ error: 'unknown endpoint' });
+        return;
+    }
+    //if the id exists delete the currency with the requested id
     currencies = currencies.filter(currency => currency.id !== requestedId); //get every opject that their id is not equal to the requestedId
+    //success msg
     response.json({ message: 'Currency deleted successfully' });
 
 })
