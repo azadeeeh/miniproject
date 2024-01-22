@@ -1,2 +1,16 @@
-POST http://localhost:3001/api/currency/
+GET http://localhost:3001/api/currency/
 
+###
+
+POST http://localhost:3001/api/currency
+Content-Type: application/json
+
+{
+    "id":4,
+    "currencyCode":"EUR",
+    "country":"England",
+    "conversionRate":0.84
+}
+
+###
+DELETE http://localhost:3001/api/currency/5
