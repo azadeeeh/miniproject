@@ -6,11 +6,11 @@ POST http://localhost:3001/api/currency
 Content-Type: application/json
 
 {
-    "id":3,
-    "currencyCode":"",
+    
+    "currencyCode":"EUR",
     "country":"England",
     "conversionRate":0.84
 }
 
 ###
-DELETE http://localhost:3001/api/currency/4
+DELETE http://localhost:3001/api/currency/3
