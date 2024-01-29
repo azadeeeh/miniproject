@@ -26,7 +26,7 @@ Currency.init({
 }, {
     sequelize,
     modelName: 'currency',
-    timestamps: false //disable timestamps
+    //timestamps: false //disable timestamps
 });
 
 // Establish association with Country model

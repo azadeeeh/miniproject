@@ -15,6 +15,9 @@ const sequelize = new Sequelize(
                 rejectUnauthorized: true,
             },
         },
+        define: {
+            //timestamps: false, //disable timestamps globally
+        },
 
     });
 

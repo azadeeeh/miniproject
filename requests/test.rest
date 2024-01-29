@@ -7,9 +7,9 @@ Content-Type: application/json
 
 {
     
-    "currencyCode":"USD",
-    "countryId":"840",
-    "conversionRate":0.84
+    "currencyCode":"EUR",
+    "countryId":978,
+    "conversionRate":0.68
 }
 
 ###
