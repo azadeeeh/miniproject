@@ -48,13 +48,18 @@ currencyRouter.get('/', async (request, response) => {
  * @receives a get request to the URL: http://localhost:3001/api/currency/:id
  * @responds with returning specific data as a JSON
  */
-currencyRouter.get('/:id', (request, response) => {
-    const requestedId = Number(request.params.id);             //getting the id from userinput in the URL and make sure it is valid number
-    const requestedCurrency = currencies.find(requestedCurrency => requestedCurrency.id === requestedId);        //get the required currency with the requested id
-    if (requestedCurrency) {
-        response.json(requestedCurrency);
-    } else {
-        response.status(404).json({ error: 'resource not found' });
+currencyRouter.get('/:id', async (request, response) => {
+    const requestedId = Number(request.params.id);  //getting the id from userinput in the URL and make sure it is valid number
+    try {
+        const requestedCurrency = await Currency.findByPk(requestedId);        //get the required currency with the requested id
+        if (requestedCurrency) {
+            response.json(requestedCurrency);
+        } else {
+            response.status(404).json({ error: 'resource not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({ error: 'Internal server error' })
     }
 });
 
@@ -69,7 +74,13 @@ currencyRouter.get('/:id', (request, response) => {
 // POST a new currency
 currencyRouter.post('/', async (request, response) => {
     const { currencyCode, countryId, conversionRate } = request.body;
+    //error handling for empty input
+    if (!currencyCode || !countryId || !conversionRate || currencyCode === "" || countryId === "" || conversionRate === "") {
+        response.status(400).json({ error: 'content missing' });
+        return;
+    }
     try {
+
         // Create a new currency entry in the database
         const newCurrency = await Currency.create({
             currencyCode,
@@ -95,18 +106,22 @@ currencyRouter.post('/', async (request, response) => {
  * Hint: updates the currency with the new conversion rate
  * @responds by returning the newly updated resource
  */
-currencyRouter.put('/:id/:newRate', (request, response) => {
-    const requestedId = Number(request.params.id);    //get the id from the input
-    const newRate = parseFloat(request.params.newRate); //get the newRate from the input
-    //map through objects and find the one with the requestedId and update the conversionRate
-    currencies = currencies.map(currency => {
-        if (currency.id === requestedId) {
-            return { ...currency, conversionRate: newRate };
+currencyRouter.put('/:id/:newRate', async (request, response) => {
+    const requestedId = Number(request.params.id); //get the id of the id of the currency that user wants to update
+    const newRate = parseFloat(request.params.newRate); //get the new rate thats gonna be replaced with the old one
+    try {
+        const currencyToUpdate = await Currency.findByPk(requestedId);     //find the currency with the requested id
+        if (currencyToUpdate) {
+            currencyToUpdate.conversionRate = newRate; //replace the old rate with the new one
+            await currencyToUpdate.save();            //save to db
+            response.json({ message: 'Currency updated successfully' });
+        } else {
+            response.status(404).json({ error: 'Resource not found' });
         }
-        return currency;
-    });
-
-    response.json({ message: 'Currency updated successfully' });
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({ error: 'Internal server error' });
+    }
 });
 
 
@@ -115,19 +130,21 @@ currencyRouter.put('/:id/:newRate', (request, response) => {
  * @receives a delete request to the URL: http://localhost:3001/api/currency/:id,
  * @responds by returning a status code of 204
  */
-currencyRouter.delete('/:id', (request, response) => {
+currencyRouter.delete('/:id', async (request, response) => {
     const requestedId = Number(request.params.id); //get the id from the input
-    //check if the requested id exists
-    const currencyExists = currencies.find(currency => currency.id === requestedId);
-    if (!currencyExists) {
-        //if id does not exists, give error msg
-        response.status(404).json({ error: 'unknown endpoint' });
-        return;
+
+    try {
+        const currencyToDelete = await Currency.findByPk(requestedId); //find the currency that user requested to delete
+        if (currencyToDelete) {                    //if the currency exists
+            await currencyToDelete.destroy();      //delete the currency
+            response.json({ message: 'Currency deleted successfully' });
+        } else {
+            response.status(404).json({ error: 'unknown endpoint' }); //if it does not exist give error
+        }
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({ error: 'Internal server error' });
     }
-    //if the id exists delete the currency with the requested id
-    currencies = currencies.filter(currency => currency.id !== requestedId); //get every opject that their id is not equal to the requestedId
-    //success msg
-    response.json({ message: 'Currency deleted successfully' });
 
 })
 
