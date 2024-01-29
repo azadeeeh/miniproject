@@ -1,7 +1,8 @@
 const express = require('express');
 const currencyRouter = express.Router();
+const Currency = require("../models/currency.js");
 
-let currencies = [
+/**let currencies = [
     {
         id: 1,
         currencyCode: "CDN",
@@ -14,7 +15,7 @@ let currencies = [
         country: "United States of America",
         conversionRate: 0.75
     }
-]
+]**/
 
 /**
  * TESTING Endpoint (Completed)
@@ -30,9 +31,17 @@ let currencies = [
  * @receives a get request to the URL: http://localhost:3001/api/currency/
  * @responds with returning the data as a JSON
  */
-currencyRouter.get('/', (request, response) => {
-    response.json(currencies)
-})
+currencyRouter.get('/', async (request, response) => {
+    try {
+        const currencies = await Currency.findAll();
+        response.status(200).json(currencies);
+
+
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 /**
  * TODO: GET:id Endpoint
@@ -55,26 +64,28 @@ currencyRouter.get('/:id', (request, response) => {
  * with data object enclosed
  * @responds by returning the newly created resource
  */
-currencyRouter.post('/', (request, response) => {
-    const { currencyCode, country, conversionRate } = request.body; //  get info from user
 
-    //error handling for empty input
-    if (!currencyCode || !country || !conversionRate || currencyCode === "" || country === "" || conversionRate === "") {
-        response.status(400).json({ error: 'content missing' });
-        return;
+
+// POST a new currency
+currencyRouter.post('/', async (request, response) => {
+    const { currencyCode, countryId, conversionRate } = request.body;
+    try {
+        // Create a new currency entry in the database
+        const newCurrency = await Currency.create({
+            currencyCode,
+            countryId,
+            conversionRate
+        });
+
+        // Send a response with the newly created currency object
+        response.status(201).json(newCurrency);
+    } catch (error) {
+        console.error(error);
+        // Send an error response if an error occurs
+        response.status(500).json({ error: 'Internal server error' });
     }
-    //creating a new object
-    const newCurrency = {
-        id: currencies.length + 1,
-        currencyCode,
-        country,
-        conversionRate
-    };
-    //adding the new object to the previous ones
-    currencies = currencies.concat(newCurrency);
-
-    response.json(newCurrency);
 });
+
 
 
 /**

@@ -1,9 +1,11 @@
 const express = require('express')  // We import the express application
+require("dotenv").config();
 //const cors = require('cors') // Necessary for localhost
 const currencyRouter = require('./routes/routes')
 //const morgan = require('morgan');
 const middlewares = require('./utils/middleWare');
 const cors = require('cors');
+const sequelize = require("./config/sequelize");
 const app = express() // Creates an express application in app
 
 //this is my assignment2 branch
@@ -48,12 +50,19 @@ app.use(middlewares.unknownEndpoint);
  */
 
 
+sequelize
+  .sync()
+  .then(() => {
 
+    const PORT = 3001;
+    app.listen(PORT, () => {
+      console.log(`Server running on port: ${PORT}`)
+    });
+  })
+  .catch((error) => {
+    console.error("error in syncing db: ", error);
+  });
 
-const PORT = 3001
-app.listen(PORT, () => {
-  console.log(`Server running on port: ${PORT}`)
-})
 
 
 

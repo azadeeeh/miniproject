@@ -7,10 +7,13 @@ Content-Type: application/json
 
 {
     
-    "currencyCode":"EUR",
-    "country":"England",
+    "currencyCode":"USD",
+    "countryId":"840",
     "conversionRate":0.84
 }
 
 ###
 DELETE http://localhost:3001/api/currency/3
+
+### 
+PUT  http://localhost:3001/api/currency/2/0.86
