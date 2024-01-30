@@ -17,7 +17,8 @@ Currency.init({
     },
     countryId: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: { model: Country, key: "id" }
     },
     conversionRate: {
         type: DataTypes.FLOAT,
@@ -25,7 +26,7 @@ Currency.init({
     }
 }, {
     sequelize,
-    modelName: 'currency',
+    modelName: 'Currency',
     //timestamps: false //disable timestamps
 });
 

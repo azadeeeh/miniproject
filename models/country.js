@@ -12,10 +12,11 @@ Country.init({
     name: {
         type: DataTypes.STRING,
         allowNull: false
-    }
+    },
+
 }, {
     sequelize,
-    modelName: 'country',
+    modelName: 'Country',
     //timestamps: false //disable timestamps
 });
 
