@@ -2,6 +2,7 @@ const express = require('express')  // We import the express application
 require("dotenv").config();
 //const cors = require('cors') // Necessary for localhost
 const router = require('./routes/routes')
+const currencyCountryRoute = require('./routes/currencyCountryRoute');
 //const morgan = require('morgan');
 const middlewares = require('./utils/middleWare');
 const cors = require('cors');
@@ -33,6 +34,7 @@ middlewares.setupMorgan(app);
 
 //setup routes
 app.use('/api', router);  // Add currency routes
+app.use('/api', currencyCountryRoute);
 
 app.use(middlewares.unknownEndpoint);
 
