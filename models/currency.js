@@ -18,7 +18,7 @@ Currency.init({
     countryId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: { model: Country, key: "id" }
+        references: { model: Country, key: "id" } //define foreign key which will be country's model id
     },
     conversionRate: {
         type: DataTypes.FLOAT,

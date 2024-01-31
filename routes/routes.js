@@ -1,6 +1,8 @@
 const express = require('express');
-const currencyRouter = express.Router();
+const router = express.Router();
 const Currency = require("../models/currency.js");
+const Country = require("../models/country.js");
+
 
 /**let currencies = [
     {
@@ -31,7 +33,7 @@ const Currency = require("../models/currency.js");
  * @receives a get request to the URL: http://localhost:3001/api/currency/
  * @responds with returning the data as a JSON
  */
-currencyRouter.get('/', async (request, response) => {
+router.get('/currency', async (request, response) => {
     try {
         const currencies = await Currency.findAll();
         response.status(200).json(currencies);
@@ -48,7 +50,7 @@ currencyRouter.get('/', async (request, response) => {
  * @receives a get request to the URL: http://localhost:3001/api/currency/:id
  * @responds with returning specific data as a JSON
  */
-currencyRouter.get('/:id', async (request, response) => {
+router.get('/currency/:id', async (request, response) => {
     const requestedId = Number(request.params.id);  //getting the id from userinput in the URL and make sure it is valid number
     try {
         const requestedCurrency = await Currency.findByPk(requestedId);        //get the required currency with the requested id
@@ -72,7 +74,7 @@ currencyRouter.get('/:id', async (request, response) => {
 
 
 // POST a new currency
-currencyRouter.post('/', async (request, response) => {
+router.post('/currency', async (request, response) => {
     const { currencyCode, countryId, conversionRate } = request.body;
     //error handling for empty input
     if (!currencyCode || !countryId || !conversionRate || currencyCode === "" || countryId === "" || conversionRate === "") {
@@ -106,7 +108,7 @@ currencyRouter.post('/', async (request, response) => {
  * Hint: updates the currency with the new conversion rate
  * @responds by returning the newly updated resource
  */
-currencyRouter.put('/:id/:newRate', async (request, response) => {
+router.put('/currency/:id/:newRate', async (request, response) => {
     const requestedId = Number(request.params.id); //get the id of the id of the currency that user wants to update
     const newRate = parseFloat(request.params.newRate); //get the new rate thats gonna be replaced with the old one
     try {
@@ -130,7 +132,7 @@ currencyRouter.put('/:id/:newRate', async (request, response) => {
  * @receives a delete request to the URL: http://localhost:3001/api/currency/:id,
  * @responds by returning a status code of 204
  */
-currencyRouter.delete('/:id', async (request, response) => {
+router.delete('/currency/:id', async (request, response) => {
     const requestedId = Number(request.params.id); //get the id from the input
 
     try {
@@ -148,6 +150,52 @@ currencyRouter.delete('/:id', async (request, response) => {
 
 })
 
+//routes for country model
+
+router.get('/country', async (request, response) => {
+    try {
+        const countries = await Country.findAll();
+        response.status(200).json({ countries });
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+router.post('/country', async (request, response) => {
+    const { name } = request.body;
+    if (!name || name === "") {
+        response.status(400).json({ error: 'content missing' });
+        return;
+    }
+    try {
+        const newCountry = await Country.create({ name });
+        response.status(201).json(newCountry);
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 
-module.exports = currencyRouter;
+
+router.delete('/country/:id', async (request, response) => {
+    const requestedId = Number(request.params.id); //get the id from the input
+
+    try {
+        const countryToDelete = await Country.findByPk(requestedId); //find the currency that user requested to delete
+        if (countryToDelete) {                    //if the currency exists
+            await countryToDelete.destroy();      //delete the currency
+            response.json({ message: 'Country deleted successfully' });
+        } else {
+            response.status(404).json({ error: 'unknown endpoint' }); //if it does not exist give error
+        }
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({ error: 'Internal server error' });
+    }
+
+})
+
+
+module.exports = router;
