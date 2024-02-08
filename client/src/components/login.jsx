@@ -1,5 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
+import './components.css';
+
 
 
 const loginInput = () => {
@@ -30,11 +32,18 @@ const loginInput = () => {
     };
     return (
         <div>
-            <input type="text" placeholder='Username' value={username} onChange={(e) => setUsername(e.target.value)} />
-            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <button onClick={handleLogin}>Login</button>
-            <button onClick={handleSignUp}>Sign Up</button>
+            <section className="inputStyle">
+                <input type="text" placeholder='Username' value={username} onChange={(e) => setUsername(e.target.value)} />
+            </section>
+            <section className="inputStyle">
+                <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            </section>
+            <section>
+                <button onClick={handleLogin}>Login</button>
+                <button onClick={handleSignUp}>Sign Up</button>
+            </section>
         </div>
+
 
     );
 
