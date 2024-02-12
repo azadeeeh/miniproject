@@ -6,16 +6,36 @@ const deleteInput = () => {
     const [currencyCode, setCurrencyCode] = useState('');
 
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (!currencyCode) {
             console.log("please fill out all the fields!")
             return;
         }
+        try {
+            const response = await fetch(`http://localhost:3001/api/currency/${currencyCode}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
 
-        console.log('successfully deleted');
+            });
+
+            if (response.ok) {
+                console.log('Currency deleted successfully');
+                // Clear input fields
+                setCurrencyCode('');
+
+            } else {
+                console.log('Failed to delete currency');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+
+        //console.log('successfully deleted');
 
         //clear input feilds
-        setCurrencyCode('');
+        //setCurrencyCode('');
 
     };
 

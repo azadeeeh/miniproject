@@ -108,14 +108,20 @@ router.post('/currency', async (request, response) => {
  * Hint: updates the currency with the new conversion rate
  * @responds by returning the newly updated resource
  */
-router.put('/currency/:id/:newRate', async (request, response) => {
-    const requestedId = Number(request.params.id); //get the id of the id of the currency that user wants to update
+router.put('/currency/:currencyCode/:newRate', async (request, response) => {
+    const requestedId = request.params.currencyCode; //get the id of the id of the currency that user wants to update
     const newRate = parseFloat(request.params.newRate); //get the new rate thats gonna be replaced with the old one
     try {
-        const currencyToUpdate = await Currency.findByPk(requestedId);     //find the currency with the requested id
-        if (currencyToUpdate) {
-            currencyToUpdate.conversionRate = newRate; //replace the old rate with the new one
-            await currencyToUpdate.save();            //save to db
+        //const currencyToUpdate = await Currency.findByPk(requestedId);     //find the currency with the requested id
+        //rowNum counts the number of records that gets updated
+        //updatedCurrency contains an array of updated items
+        //with findOne and PK we can only update one record
+        const [rowNum, updatedCurrency] = await Currency.update(
+            { conversionRate: newRate },
+            { where: { currencyCode: requestedId } }); //find the currency by currency code which is not PK
+        if (rowNum > 0) {
+            //currencyToUpdate.conversionRate = newRate; //replace the old rate with the new one
+            //await currencyToUpdate.save();            //save to db
             response.json({ message: 'Currency updated successfully' });
         } else {
             response.status(404).json({ error: 'Resource not found' });
@@ -132,13 +138,19 @@ router.put('/currency/:id/:newRate', async (request, response) => {
  * @receives a delete request to the URL: http://localhost:3001/api/currency/:id,
  * @responds by returning a status code of 204
  */
-router.delete('/currency/:id', async (request, response) => {
-    const requestedId = Number(request.params.id); //get the id from the input
 
+router.delete('/currency/:currencyCode', async (request, response) => {
+    const requestedCurrencyCode = request.params.currencyCode; //get the id from the input
+    //since we want to delete every record with the same currency code we cant use findByPK or findOne,
+    // we use .destroy for any record that have the requested currency code
     try {
-        const currencyToDelete = await Currency.findByPk(requestedId); //find the currency that user requested to delete
-        if (currencyToDelete) {                    //if the currency exists
-            await currencyToDelete.destroy();      //delete the currency
+        const currencyToDelete = await Currency.destroy({
+            where: {
+                currencyCode: requestedCurrencyCode
+            }
+        }); //find the currency that user requested to delete
+        if (currencyToDelete > 0) {                    //if the currency exists
+            //await currencyToDelete.destroy();      //delete the currency
             response.json({ message: 'Currency deleted successfully' });
         } else {
             response.status(404).json({ error: 'unknown endpoint' }); //if it does not exist give error

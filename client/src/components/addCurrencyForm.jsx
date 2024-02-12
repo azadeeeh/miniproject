@@ -1,45 +1,56 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import './components.css';
-
-const addInput = () => {
+//when the user clicks add button it makes a POST request to the backend
+const AddInput = () => {
     const [currencyCode, setCurrencyCode] = useState('');
-    const [currencyID, setCurrencyID] = useState('');
+    const [countryId, setCountryId] = useState('');
     const [conversionRate, setConversionRate] = useState('');
 
-    const handleAdd = () => {
-        if (!currencyCode || !currencyID || !conversionRate) {
-            console.log("please fill out ll the fields!")
+    const handleAdd = async () => {
+        if (!currencyCode || !countryId || !conversionRate) {
+            console.log("Please fill out all the fields!");
             return;
         }
 
-        console.log('successfully Added');
+        try {
+            const response = await fetch('http://localhost:3001/api/currency', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    currencyCode: currencyCode,
+                    countryId: countryId,
+                    conversionRate: parseFloat(conversionRate)
+                }),
+            });
 
-        //clear input feilds
-        setCurrencyCode('');
-        setCurrencyID('');
-        setConversionRate('');
+            if (response.ok) {
+                console.log('Currency added successfully');
+                // Clear input fields
+                setCurrencyCode('');
+                setCountryId('');
+                setConversionRate('');
+            } else {
+                console.log('Failed to add currency');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
     return (
         <div>
             <section className="inputStyle">
                 <input type="text" placeholder='Currency Code' value={currencyCode} onChange={(e) => setCurrencyCode(e.target.value)} />
-                <input type="text" placeholder="Currency ID" value={currencyID} onChange={(e) => setCurrencyID(e.target.value)} />
-                <input type="integer" placeholder="Conversion Rate" value={conversionRate} onChange={(e) => setConversionRate(e.target.value)} />
+                <input type="text" placeholder="Country ID" value={countryId} onChange={(e) => setCountryId(e.target.value)} />
+                <input type="number" placeholder="Conversion Rate" value={conversionRate} onChange={(e) => setConversionRate(e.target.value)} />
             </section>
             <section>
                 <button onClick={handleAdd}>Add</button>
             </section>
-
-
         </div>
-
-
     );
+};
 
-}
-
-export default addInput;
-
-
+export default AddInput;
