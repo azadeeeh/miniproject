@@ -50,9 +50,13 @@ app.use(middlewares.unknownEndpoint);
  * country: a string, the name of the country
  * conversionRate: the amount, in that currency, required to equal 1 Canadian dollar
  */
+const PORT = 3001;
+const server = app.listen(PORT, () => {
+  console.log(`Server running on port: ${PORT}`)
+})
 
 
-sequelize
+/*sequelize
   .sync()
   .then(() => {
 
@@ -63,9 +67,18 @@ sequelize
   })
   .catch((error) => {
     console.error("error in syncing db: ", error);
+  });*/
+
+sequelize
+  .sync()
+  .then(() => {
+    console.log('Database synced');
+  })
+  .catch((error) => {
+    console.error("Error syncing database: ", error);
   });
 
-
+module.exports = server;
 
 
 

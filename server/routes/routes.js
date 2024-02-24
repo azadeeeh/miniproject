@@ -1,7 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const Currency = require("../models/currency.js");
+//const Currency = require("../models/currency.js");
+//here we import the required model based on NODE_ENV, if its test it gives us testCurrency or else currency
+const Currency = process.env.NODE_ENV === "test" ? require("../models/testCurrency.js") : require("../models/currency.js");
 const Country = require("../models/country.js");
+
+
+
+
 
 
 /**let currencies = [
@@ -77,26 +83,26 @@ router.get('/currency/:id', async (request, response) => {
 router.post('/currency', async (request, response) => {
     const { currencyCode, countryId, conversionRate } = request.body;
     //error handling for empty input
-    if (!currencyCode || !countryId || !conversionRate || currencyCode === "" || countryId === "" || conversionRate === "") {
+    /*if (!currencyCode || !countryId || !conversionRate || currencyCode === "" || countryId === "" || conversionRate === "") {
         response.status(400).json({ error: 'content missing' });
         return;
-    }
-    try {
+    }*/
+    //try {
 
-        // Create a new currency entry in the database
-        const newCurrency = await Currency.create({
-            currencyCode,
-            countryId,
-            conversionRate
-        });
+    // Create a new currency entry in the database
+    const newCurrency = await Currency.create({
+        currencyCode,
+        countryId,
+        conversionRate
+    });
 
-        // Send a response with the newly created currency object
-        response.status(201).json(newCurrency);
-    } catch (error) {
-        console.error(error);
-        // Send an error response if an error occurs
-        response.status(500).json({ error: 'Internal server error' });
-    }
+    // Send a response with the newly created currency object
+    response.status(201).json(newCurrency);
+    //} catch (error) {
+    //console.error(error);
+    // Send an error response if an error occurs
+    //response.status(500).json({ error: 'Internal server error' });
+    //}
 });
 
 
@@ -118,11 +124,13 @@ router.put('/currency/:currencyCode/:newRate', async (request, response) => {
         //with findOne and PK we can only update one record
         const [rowNum, updatedCurrency] = await Currency.update(
             { conversionRate: newRate },
-            { where: { currencyCode: requestedId } }); //find the currency by currency code which is not PK
+            { where: { currencyCode: requestedId }, returning: true }); //find the currency by currency code which is not PK
         if (rowNum > 0) {
             //currencyToUpdate.conversionRate = newRate; //replace the old rate with the new one
             //await currencyToUpdate.save();            //save to db
-            response.json({ message: 'Currency updated successfully' });
+            //response.json({ message: 'Currency updated successfully' });
+            console.log(updatedCurrency);
+            response.status(200).json({ message: 'updated successfully', updatedCurrency }); //include the updated items in response
         } else {
             response.status(404).json({ error: 'Resource not found' });
         }
@@ -151,7 +159,7 @@ router.delete('/currency/:currencyCode', async (request, response) => {
         }); //find the currency that user requested to delete
         if (currencyToDelete > 0) {                    //if the currency exists
             //await currencyToDelete.destroy();      //delete the currency
-            response.json({ message: 'Currency deleted successfully' });
+            response.status(201).json({ message: 'Currency deleted successfully' });
         } else {
             response.status(404).json({ error: 'unknown endpoint' }); //if it does not exist give error
         }

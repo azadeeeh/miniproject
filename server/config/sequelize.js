@@ -21,6 +21,18 @@ const sequelize = new Sequelize(
 
     });
 
+//test connection
+const testConnection = async () => {
+    try {
+        await sequelize.authenticate();
+        console.log('successfully connected to DB')
+    } catch (error) {
+        console.log('error connecting to DB')
+        console.log(error)
+    }
+}
+testConnection()
+
 
 //5 steps to create db 
 //1- add variables in .env 
