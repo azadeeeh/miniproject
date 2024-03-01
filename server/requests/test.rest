@@ -20,4 +20,4 @@ Content-Type: application/json
 DELETE http://localhost:3001/api/currency/EU
 
 ### 
-PUT  http://localhost:3001/api/currency/EUR/0.7
+PUT  http://localhost:3001/api/currency/EUR/0.8
