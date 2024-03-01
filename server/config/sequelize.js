@@ -1,14 +1,16 @@
 const { Sequelize } = require("sequelize");
-require('dotenv').config();
+const path = require('path');
+const pg = require('pg');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
+const databaseURL = `postgres://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}`
 //sequelize makes tables
-const sequelize = new Sequelize(
-    process.env.DB_NAME,
-    process.env.DB_USER,
-    process.env.DB_PASSWORD,
+const sequelize = new Sequelize(databaseURL,
+
     {
-        host: process.env.DB_HOST,
+
         port: process.env.DB_PORT,
-        dialect: "postgres",
+        //dialect: "postgres",
+        dialectModule: pg,
         dialectOptions: {
             ssl: {
                 require: true,
