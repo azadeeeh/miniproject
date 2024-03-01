@@ -3,6 +3,7 @@ const path = require('path');
 const pg = require('pg');
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const databaseURL = `postgres://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}`
+console.log(databaseURL);
 //sequelize makes tables
 const sequelize = new Sequelize(databaseURL,
 
