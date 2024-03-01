@@ -45,7 +45,7 @@ jobs:
           run: npm install
 
         - name: Install dotenv
-        run: npm install dotenv --save-dev
+          run: npm install dotenv --save-dev
           
         - name: Run backend tests
           run: npm run test
