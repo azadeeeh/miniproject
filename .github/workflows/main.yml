@@ -1,0 +1,55 @@
+name: Production deployment pipeline
+on:
+  push:
+    branches:
+      - production
+jobs:
+  Client_test-pipeline:
+    runs-on: ubuntu-latest
+    defaults: 
+      run: 
+        working-directory: ./client
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        
+      - name: Installing dependencies
+        run: npm install
+        
+      - name: Run frontend tests
+        run: npm run test
+
+
+        
+
+  Server-test-pipeline:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+    steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+        
+        - name: Setup Node.js
+          uses: actions/setup-node@v4
+          
+        - name: Installing dependencies
+          run: npm install
+          
+        - name: Run backend tests
+          run: npm run test
+
+          
+
+        
+
+        
+
+      
+    
+  
