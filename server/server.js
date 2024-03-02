@@ -1,4 +1,4 @@
-const express = require('express')  // We import the express application
+const express = require('express');  // We import the express application
 require("dotenv").config();
 //const cors = require('cors') // Necessary for localhost
 const router = require('./routes/routes')
