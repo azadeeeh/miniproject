@@ -25,6 +25,7 @@ router.get('/currency-countryName', async (request, response) => {
     } catch (error) {
         console.error(error);
         response.status(500).json({ error: 'Internal server error' });
+        response.status(404).json({ error: 'hello' });
     }
 });
 
