@@ -11,6 +11,7 @@ const app = express() // Creates an express application in app
 
 //this is my assignment2 branch
 
+
 /**
  * Initial application setup
  * We need to use cors so we can connect to a localhost later
