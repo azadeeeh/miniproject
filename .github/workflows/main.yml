@@ -25,6 +25,9 @@ jobs:
         
       - name: Run frontend tests
         run: npm run test
+      
+      - name: Run client hook
+        run: curl ${{ secrets.SERVER_DEPLOYMENT_HOOK }} 
 
 
         
@@ -55,6 +58,9 @@ jobs:
           
         - name: Run backend tests
           run: npm run test
+
+        - name: Run servrt hook
+          run: curl ${{ secrets.CLIENT_DEPLOYMENT_HOOK }}
 
           
 
