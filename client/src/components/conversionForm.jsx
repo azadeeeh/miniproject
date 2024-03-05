@@ -19,7 +19,7 @@ const convertInput = () => {
     //get data 
     const fetchConversionRates = async () => {
         try {
-            const response = await fetch('http://localhost:3001/api/currency');
+            const response = await fetch('/api/currency');
             const data = await response.json();
             setConversionRates(data);
         } catch (error) {

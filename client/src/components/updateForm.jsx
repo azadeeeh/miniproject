@@ -11,7 +11,7 @@ const UpdateInput = () => {
             return;
         }
         try {
-            const response = await fetch(`http://localhost:3001/api/currency/${currencyCode}/${amount}`, {
+            const response = await fetch(`/api/currency/${currencyCode}/${amount}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
