@@ -27,7 +27,7 @@ jobs:
         run: npm run test
       
       - name: Run client hook
-        run: curl ${{ secrets.SERVER_DEPLOYMENT_HOOK }} 
+        run: curl ${{ secrets.CLIENT_DEPLOYMENT_HOOK }} 
 
 
         
@@ -53,14 +53,13 @@ jobs:
         - name: Installing dependencies
           run: npm install
 
-        - name: Install dotenv
-          run: npm install dotenv --save-dev
+    
           
         - name: Run backend tests
           run: npm run test
 
         - name: Run servrt hook
-          run: curl ${{ secrets.CLIENT_DEPLOYMENT_HOOK }}
+          run: curl ${{ secrets.SERVER_DEPLOYMENT_HOOK }}
 
           
 
