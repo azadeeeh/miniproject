@@ -5,7 +5,7 @@
 const sequelize = require('../config/sequelize') // Provide a path to your config.js or database.js file, wherever you export that sequelize
 const helper = require('./test_helper')
 const server = require('../server') // Provide a path to your server.js file, or wherever you are starting your server and add your endpoints via router
-    .default // Provide a path to your server.js file, or wherever you are starting your server and add your endpoints via router
+//.default // Provide a path to your server.js file, or wherever you are starting your server and add your endpoints via router
 const supertest = require('supertest')
 const { update } = require('../models/testCurrency')
 const api = supertest(server) // Creates a test api that will send requests where we want them to be sent

@@ -51,7 +51,7 @@ app.use(middlewares.unknownEndpoint);
  * country: a string, the name of the country
  * conversionRate: the amount, in that currency, required to equal 1 Canadian dollar
  */
-const PORT = 3001;
+const PORT = 3000;
 const server = app.listen(PORT, () => {
   console.log(`Server running on port: ${PORT}`)
 })
